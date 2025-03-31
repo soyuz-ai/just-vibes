@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soyu3</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      z-index: 0;
+    }
+
+    #logo {
+      position: absolute;
+      top: 21px;
+      left: 34px;
+      width: 89px;
+      z-index: 21;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .text-wrapper {
+      position: absolute;
+      bottom: 55px;
+      left: 13vw;
+      max-width: 89vw;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      z-index: 10;
+      color: rgb(233, 233, 233);
+      font-size: clamp(13px, 5vw, 34px);
+      line-height: 1.55;
+      pointer-events: none;
+    }
+
+    .text-line {
+      display: inline-block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      transition: transform 1s ease, opacity 1s ease;
+    }
+
+    .text-line.cursor::after {
+      content: '▍';
+      animation: blink 1.44s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 55% { opacity: 1; }
+      34% { opacity: 0; }
+    }
+
+    @media (max-width: 600px) {
+      #logo {
+        top: 13px;
+        left: 21px;
+        width: 55px;
+      }
+      .text-wrapper {
+        left: 8vw;
+        bottom: 34px;
+        font-size: clamp(13px, 6vw, 21px);
+        max-width: 89vw;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="logo">
+    <!-- оставляем SVG без изменений -->
+    <svg viewBox="0 0 318 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M316.233 17.72V64H303.773V17.72H316.233ZM302.883 7.485C302.883 3.569 306.087 0.364998 310.003 0.364998C313.919 0.364998 317.123 3.569 317.123 7.485C317.123 11.401 313.919 14.605 310.003 14.605C306.087 14.605 302.883 11.401 302.883 7.485Z"
+            fill="white" />
+        <path
+            d="M270.874 31.96H258.414C259.126 20.123 268.649 16.385 279.329 16.385C290.454 16.385 299.354 20.39 299.354 32.405V64H286.894V55.1H286.449C286.449 55.1 283.601 65.335 271.764 65.335C263.309 65.335 257.079 61.419 257.079 52.875C257.079 44.242 264.199 40.326 271.853 38.368C279.596 36.41 286.894 35.787 286.894 30.625C286.894 26.976 284.224 24.84 279.329 24.84C273.989 24.84 271.052 26.976 270.874 31.96ZM286.894 40.682C284.847 42.551 280.664 43.53 277.104 44.42C273.099 45.399 269.717 47.446 269.717 51.54C269.717 55.1 272.209 57.325 276.214 57.325C284.669 57.325 286.894 47.535 286.894 40.682Z"
+            fill="white" />
+        <path
+            d="M238.858 57.77C238.858 53.854 242.062 50.65 245.978 50.65C249.894 50.65 253.098 53.854 253.098 57.77C253.098 61.686 249.894 64.89 245.978 64.89C242.062 64.89 238.858 61.686 238.858 57.77Z"
+            fill="white" />
+        <path
+            d="M190.785 27.51V17.72H233.505V27.51L218.375 41.75C218.375 41.75 235.285 42.195 235.285 60.885C235.285 71.12 228.165 81.355 213.035 81.355C195.68 81.355 189.45 71.12 189.45 60.44H201.91C201.91 66.67 205.025 72.01 213.035 72.01C219.176 72.01 222.825 67.56 222.825 61.33C222.825 54.655 219.71 49.76 207.25 49.76H203.69V42.64L219.265 27.51H190.785Z"
+            fill="white" />
+        <path
+            d="M186.321 17.72V64H174.306V56.435H173.861C173.861 56.435 169.856 65.335 159.621 65.335C146.716 65.335 143.156 56.88 143.156 46.2V17.72H155.616V43.53C155.616 51.54 157.841 55.1 163.626 55.1C170.301 55.1 173.861 51.095 173.861 41.75V17.72H186.321Z"
+            fill="white" />
+        <path
+            d="M140.058 17.72L123.593 65.335C119.944 75.926 115.138 81.355 105.793 81.355C101.343 81.355 97.7831 80.02 97.7831 80.02V69.785C97.7831 69.785 100.453 70.675 103.568 70.675C108.018 70.675 109.798 68.272 111.578 64L92.888 17.72H106.238L117.541 48.247L126.708 17.72H140.058Z"
+            fill="white" />
+        <path
+            d="M58.6091 40.86C58.6091 49.226 61.8131 55.99 69.7341 55.99C77.6551 55.99 80.8591 49.226 80.8591 40.86C80.8591 32.494 77.6551 25.73 69.7341 25.73C61.8131 25.73 58.6091 32.494 58.6091 40.86ZM46.1491 40.86C46.1491 27.332 54.5151 16.385 69.7341 16.385C84.9531 16.385 93.3191 27.332 93.3191 40.86C93.3191 54.388 84.9531 65.335 69.7341 65.335C54.5151 65.335 46.1491 54.388 46.1491 40.86Z"
+            fill="white" />
+        <path
+            d="M0.779999 48.87H12.795C12.795 48.87 12.795 56.88 22.585 56.88C29.26 56.88 31.04 53.765 31.04 51.095C31.04 41.305 1.67 48.87 1.67 31.07C1.67 23.06 9.235 16.385 21.695 16.385C39.495 16.385 42.165 26.62 42.165 31.07H30.15C30.15 31.07 30.15 24.84 21.695 24.84C16.8 24.84 14.13 27.332 14.13 30.18C14.13 38.19 43.5 32.405 43.5 49.76C43.5 58.66 35.935 65.335 22.585 65.335C4.34 65.335 0.779999 54.21 0.779999 48.87Z"
+            fill="white" />
+    </svg>
+  </div>
+
+  <canvas id="canvas"></canvas>
+  <div class="text-wrapper" id="textWrapper"></div>
+
+  <script>
+    // ==== FIBO WAVES ====
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const colorFib = [13, 21, 34, 55, 89, 144, 233];
+    const dashFib = [5, 8, 13, 21, 34];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let lastMouseX = mouse.x;
+    let velocity = 0;
+    let waveTime = 0;
+    const startTime = Date.now();
+    const lines = 89;
+
+    function getNearest(value, array) {
+      return array.reduce((a, b) => Math.abs(b - value) < Math.abs(a - value) ? b : a);
+    }
+
+    function getWaveColor(t) {
+      let r, g, b;
+      if (t < 0.5) {
+        const p = t / 0.5;
+        r = getNearest(233 - (233 - 13) * p, colorFib);
+        g = getNearest(233 - (233 - 13) * p, colorFib);
+        b = getNearest(233, colorFib);
+      } else {
+        const p = (t - 0.5) / 0.5;
+        r = getNearest(13 + (233 - 13) * p, colorFib);
+        g = getNearest(13, colorFib);
+        b = getNearest(233 - (233 - 13) * p, colorFib);
+      }
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function draw() {
+      const elapsed = Date.now() - startTime;
+      const fadeDuration = 2333;
+      const fadeProgress = Math.min(1, elapsed / fadeDuration);
+
+      const bgR = Math.round(13 * (1 - fadeProgress) + 1 * fadeProgress);
+      const bgG = Math.round(13 * (1 - fadeProgress) + 1 * fadeProgress);
+      const bgB = Math.round(233 * (1 - fadeProgress) + 1 * fadeProgress);
+      ctx.fillStyle = `rgb(${bgR}, ${bgG}, ${bgB})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const t = mouse.x / canvas.width;
+      const waveColor = getWaveColor(t);
+      const dynamicThickness = getNearest(1 + velocity * 0.1, [1, 2, 3, 5, 8, 13]);
+
+      for (let i = 0; i < lines; i++) {
+        const y = (canvas.height / lines) * i;
+        ctx.beginPath();
+        const thickness = dynamicThickness + Math.sin((i + waveTime * 0.3) * 0.2) * 2;
+        ctx.lineWidth = Math.max(1, thickness);
+
+        const dy = y - mouse.y;
+        const dashFactor = Math.min(1, Math.abs(dy) / canvas.height);
+        const rawDash = 1 + dashFactor * 13;
+        const dashLength = getNearest(rawDash, dashFib);
+        const gapLength = getNearest(rawDash * 0.8, dashFib);
+
+        ctx.setLineDash([dashLength, gapLength]);
+
+        ctx.moveTo(0, y);
+        for (let x = 0; x < canvas.width; x += 13) {
+          const dx = x - mouse.x;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const wave = Math.sin(dist * 0.021 - waveTime * 0.13) * 13;
+          ctx.lineTo(x, y + wave);
+        }
+
+        ctx.strokeStyle = waveColor;
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      waveTime += 0.5;
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("mousemove", (e) => {
+      const deltaX = Math.abs(e.clientX - lastMouseX);
+      velocity = deltaX;
+      lastMouseX = e.clientX;
+      mouse = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    draw();
+  </script>
+
+  <script>
+    const messages = [
+      "Intelligence in Unity",
+      "Интеллект в Единстве",
+      "智能的合一",
+      "L'intelligence dans l'unité",
+      "知性の統一",
+      "La inteligencia en la unidad",
+      "지성의 통합",
+      "Intelligenz in der Einheit",
+      "L'intelligenza nell'unità",
+      "अखंडता में बुद्धिमत्ता",
+      "Inteligência na Unidade",
+      "Birlikte Zeka",
+      "Értelem az egységben",
+      "Jednota a inteligence",
+      "Inteligencija u jedinstvu",
+      "Intelligentia in Unitate"
+    ];
+
+    const wrapper = document.getElementById("textWrapper");
+    let index = 0;
+
+    async function typeLine(text) {
+      return new Promise((resolve) => {
+        const line = document.createElement("div");
+        line.className = "text-line cursor";
+        wrapper.appendChild(line);
+
+        let i = 0;
+        function typeChar() {
+          line.textContent = text.slice(0, i);
+          i++;
+          if (i <= text.length) {
+            const delay = text.charCodeAt(i - 1) > 255 ? 144 : 55;
+            setTimeout(typeChar, delay);
+          } else {
+            setTimeout(() => {
+              line.classList.remove("cursor");
+              resolve();
+            }, 2333);
+          }
+        }
+
+        typeChar();
+      });
+    }
+
+    function shiftLinesUp() {
+      const lines = wrapper.querySelectorAll('.text-line');
+      lines.forEach((line, i) => {
+        const age = lines.length - i;
+        line.style.transform = `translateY(-${age * 21}px)`;
+        line.style.opacity = Math.max(0, 1 - age * 0.34);
+        if (age > 3) {
+          setTimeout(() => line.remove(), 1440);
+        }
+      });
+    }
+
+    async function loopMessages() {
+      while (true) {
+        const message = messages[index];
+        const lines = wrapText(message, 55);
+        for (let line of lines) {
+          await typeLine(line);
+          shiftLinesUp();
+        }
+        index = (index + 1) % messages.length;
+        await new Promise(r => setTimeout(r, 2333));
+      }
+    }
+
+    function wrapText(text, maxCharsPerLine) {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = '';
+      for (let word of words) {
+        if ((currentLine + word).length <= maxCharsPerLine) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine.trim());
+          currentLine = word + ' ';
+        }
+      }
+      if (currentLine) lines.push(currentLine.trim());
+      return lines;
+    }
+
+    setTimeout(loopMessages, 144);
+  </script>
+</body>
+</html>
